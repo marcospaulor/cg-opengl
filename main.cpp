@@ -45,7 +45,7 @@ GLfloat sem_cor[]         = { 0.0, 0.0, 0.0, 1.0};
   
 GLint gouraud=0;
 
-GLfloat tetaxz=1;
+GLfloat tetaxz=0;
 GLfloat raioxz=5;
 
 #define imageWidth 64
