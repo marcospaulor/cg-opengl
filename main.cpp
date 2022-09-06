@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
+// #include "lib/glew.h"
+#include "lib/gl.h"
+#include "lib/glu.h"
+#include "lib/glut.h"
 
 GLint WIDTH_GL = 800;
 GLint HEIGHT_GL = 600;
@@ -47,21 +49,6 @@ GLint move    = 0;
 static GLubyte image[imageHeight][imageWidth][4];
 
 static GLuint texName;
-
-void texture(void) {
-    int i, j, c;
-        
-    for (i = 0; i < imageHeight; i++) {
-        for (j = 0; j < imageWidth; j++) {
-            c = ((((i&0x8)==0)^((j&0x8))==0))*255;
-
-            image[i][j][0] = (GLubyte) c;
-            image[i][j][1] = (GLubyte) c;
-            image[i][j][2] = (GLubyte) c;
-            image[i][j][3] = (GLubyte) 255;
-        }
-    }
-}
 
 void reshape(int width, int height) {
     WIDTH_GL=width;
