@@ -1,8 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "quarto.h"
+#include <iostream>
 #include <math.h>
-#include <GL/glu.h>
-#include <GL/glut.h>
+#include <cstdio>
 
 GLint WIDTH_GL = 800;
 GLint HEIGHT_GL = 600;
@@ -42,27 +41,6 @@ GLfloat sem_cor[]         = { 0.0, 0.0, 0.0, 1.0};
 GLint gouraud = 1;
 GLint move    = 0;
 
-#define imageWidth 64
-#define imageHeight 64
-static GLubyte image[imageHeight][imageWidth][4];
-
-static GLuint texName;
-
-void texture(void) {
-    int i, j, c;
-        
-    for (i = 0; i < imageHeight; i++) {
-        for (j = 0; j < imageWidth; j++) {
-            c = ((((i&0x8)==0)^((j&0x8))==0))*255;
-
-            image[i][j][0] = (GLubyte) c;
-            image[i][j][1] = (GLubyte) c;
-            image[i][j][2] = (GLubyte) c;
-            image[i][j][3] = (GLubyte) 255;
-        }
-    }
-}
-
 void reshape(int width, int height) {
     WIDTH_GL=width;
     HEIGHT_GL=height;
@@ -97,255 +75,13 @@ void display(void){
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, plano_especular);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, plano_brilho);
     
-    // Chão
     glNormal3f(0,1,0); 
 
-    glColor3f(0.25f,0.25f,0.25f);
-    glBegin(GL_QUADS);
-        glVertex3f(-5.0f,0.0f,5.0f);
-        glVertex3f(5.0f,0.0f,5.0f);
-        glVertex3f(5.0f,0.0f,-5.0f);
-        glVertex3f(-5.0f,0.0f,-5.0f);
-    glEnd();
-
-    // Face Esquerda
-    glColor3f(0.25f,0.25f,0.25f);
-    glBegin(GL_QUADS);
-        glVertex3f(5,0,5);
-        glVertex3f(-5,0,5);
-        glVertex3f(-5,5,5);
-        glVertex3f(5,5,5);
-    glEnd();
-
-    // Face Traseira
-    glBegin(GL_QUADS);
-        glVertex3f(-5,0,5);
-        glVertex3f(-5,0,-5);
-        glVertex3f(-5,5,-5);
-        glVertex3f(-5,5,5);
-    glEnd();
-
-    // Face Direita com Buraco
-    glBegin(GL_QUADS);
-        glVertex3f(-5,0,-5);
-        glVertex3f(-2,0,-5);
-        glVertex3f(-2,5,-5);
-        glVertex3f(-5,5,-5);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(5,0,-5);
-        glVertex3f(2,0,-5);
-        glVertex3f(2,5,-5);
-        glVertex3f(5,5,-5);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-2,4,-5);
-        glVertex3f(2,4,-5);
-        glVertex3f(2,5,-5);
-        glVertex3f(-2,5,-5);
-    glEnd();
-
-    // Face Dianteira
-    glBegin(GL_QUADS);
-        glVertex3f(5,0,5);
-        glVertex3f(5,0,-5);
-        glVertex3f(5,5,-5);
-        glVertex3f(5,5,5);
-    glEnd();
-
-    // Teto
-    glBegin(GL_QUADS);
-        glColor3f(0.25f,0.25f,0.25f);
-        glVertex3f(-5,5,5);
-        glVertex3f(5,5,5);
-        glVertex3f(5,5,-5);
-        glVertex3f(-5,5,-5);
-    glEnd();
-
-    // Caixa de Som Esquerda
-    glColor3f(0.63f, 0.32f, 0.18f);
-    glBegin(GL_QUADS);
-        glVertex3f(-5,0.0,2.1);
-        glVertex3f(-4,0.0,2.1);
-        glVertex3f(-4,2.0,2.1);
-        glVertex3f(-5,2.0,2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-5,0.0,1.1);
-        glVertex3f(-4,0.0,1.1);
-        glVertex3f(-4,2.0,1.1);
-        glVertex3f(-5,2.0,1.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4,0.0,2.1);
-        glVertex3f(-4,0.0,1.1);
-        glVertex3f(-4,2.0,1.1);
-        glVertex3f(-4,2.0,2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-5,2.0,2.1);
-        glVertex3f(-5,2.0,1.1);
-        glVertex3f(-4,2.0,1.1);
-        glVertex3f(-4,2.0,2.1);
-    glEnd();
-
-    // Caixa de Som Direita
-    glBegin(GL_QUADS);
-        glVertex3f(-5,0.0,-2.1);
-        glVertex3f(-4,0.0,-2.1);
-        glVertex3f(-4,2.0,-2.1);
-        glVertex3f(-5,2.0,-2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-5,0.0,-1.1);
-        glVertex3f(-4,0.0,-1.1);
-        glVertex3f(-4,2.0,-1.1);
-        glVertex3f(-5,2.0,-1.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4,0.0,-2.1);
-        glVertex3f(-4,0.0,-1.1);
-        glVertex3f(-4,2.0,-1.1);
-        glVertex3f(-4,2.0,-2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-5,2.0,-2.1);
-        glVertex3f(-5,2.0,-1.1);
-        glVertex3f(-4,2.0,-1.1);
-        glVertex3f(-4,2.0,-2.1);
-    glEnd();
-
-    // Caixa Central
-    glBegin(GL_QUADS);
-        glVertex3f(-5,0.0,1.0);
-        glVertex3f(-4,0.0,1.0);
-        glVertex3f(-4,1.0,1.0);
-        glVertex3f(-5,1.0,1.0);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-5,0.0,-1.0);
-        glVertex3f(-4,0.0,-1.0);
-        glVertex3f(-4,1.0,-1.0);
-        glVertex3f(-5,1.0,-1.0);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4,0.0,1.0);
-        glVertex3f(-4,0.0,-1.0);
-        glVertex3f(-4,1.0,-1.0);
-        glVertex3f(-4,1.0,1.0);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-5,1.0,1.0);
-        glVertex3f(-5,1.0,-1.0);
-        glVertex3f(-4,1.0,-1.0);
-        glVertex3f(-4,1.0,1.0);
-    glEnd();
-
-    // Televisão
-    glColor3f(0.0f, 0.0f, 0.0f);
-    glBegin(GL_QUADS);
-        glVertex3f(-5.0,3.0,-2.1);
-        glVertex3f(-5.0,4.5,-2.1);
-        glVertex3f(-4.9,4.5,-2.1);
-        glVertex3f(-4.9,3.0,-2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-5.0,3.0,2.1);
-        glVertex3f(-5.0,4.5,2.1);
-        glVertex3f(-4.9,4.5,2.1);
-        glVertex3f(-4.9,3.0,2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-5.0,3.0,-2.1);
-        glVertex3f(-5.0,3.0,2.1);
-        glVertex3f(-4.9,3.0,2.1);
-        glVertex3f(-4.9,3.0,-2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-5.0,4.5,-2.1);
-        glVertex3f(-5.0,4.5,2.1);
-        glVertex3f(-4.9,4.5,2.1);
-        glVertex3f(-4.9,4.5,-2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4.9,3.0,-2.1);
-        glVertex3f(-4.9,3.0,-2.0);
-        glVertex3f(-4.9,4.5,-2.0);
-        glVertex3f(-4.9,4.5,-2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4.9,3.0,2.1);
-        glVertex3f(-4.9,3.0,2.0);
-        glVertex3f(-4.9,4.5,2.0);
-        glVertex3f(-4.9,4.5,2.1);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4.9,3.0,-2.0);
-        glVertex3f(-4.9,3.0,2.0);
-        glVertex3f(-4.9,3.1,2.0);
-        glVertex3f(-4.9,3.1,-2.0);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4.9,4.5,-2.0);
-        glVertex3f(-4.9,4.5,2.0);
-        glVertex3f(-4.9,4.4,2.0);
-        glVertex3f(-4.9,4.4,-2.0);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4.965,3.1,-2.0);
-        glVertex3f(-4.90,3.1,-2.0);
-        glVertex3f(-4.90,3.1,2.0);
-        glVertex3f(-4.965,3.1,2.0);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4.965,4.4,-2.0);
-        glVertex3f(-4.90,4.4,-2.0);
-        glVertex3f(-4.90,4.4,2.0);
-        glVertex3f(-4.965,4.4,2.0);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4.965,3.1,-2.0);
-        glVertex3f(-4.90,3.1,-2.0);
-        glVertex3f(-4.90,4.4,-2.0);
-        glVertex3f(-4.965,4.4,-2.0);
-    glEnd();
-
-    glBegin(GL_QUADS);
-        glVertex3f(-4.965,3.1,2.0);
-        glVertex3f(-4.90,3.1,2.0);
-        glVertex3f(-4.90,4.4,2.0);
-        glVertex3f(-4.965,4.4,2.0);
-    glEnd();
-
-    // Tela
-    glColor3f(1.0,0.25,0.25);
-    glBegin(GL_QUADS);
-        glVertex3f(-4.965,3.1,2.0);
-        glVertex3f(-4.965,3.1,-2.0);
-        glVertex3f(-4.965,4.4,-2.0);
-        glVertex3f(-4.965,4.4,2.0);
-    glEnd();
+    chao();
+    paredes();
+    teto();
+    som();
+    tv();
 
     glPushMatrix();
     glTranslatef(posicao_luz0[0],posicao_luz0[1],posicao_luz0[2]);
@@ -364,7 +100,7 @@ void special(int key, int x, int y) {
             if (move == 0) {
                 olho[1] += 0.5;
             }
-            else if (obs[0] > -5) {
+            else if (obs[0] > -4.5) {
                 obs[0] -= 0.5;
                 olho[0] -= 0.5;
             }
@@ -405,16 +141,6 @@ void keyboard(unsigned char key, int x, int y) {
     case 'g':
         gouraud = !gouraud;
         glutPostRedisplay();
-        break;
-    case 'r':
-        raioxz=raioxz+1;
-        glutPostRedisplay();
-        break;
-    case 'R':
-        if(raioxz>1){
-            raioxz=raioxz-1;
-            glutPostRedisplay();
-        }
         break;
     case 'm':
         move = 1 - move;
