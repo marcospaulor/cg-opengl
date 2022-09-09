@@ -6,7 +6,7 @@
 GLuint idTextura;
 AUX_RGBImageRec *imagemTextura;
 
-AUX_RGBImageRec *LoadBMP(const char *filename){
+AUX_RGBImageRec *LoadBMP(const char *filename) {
     FILE *file = NULL;
 
     if (!filename) {
@@ -32,7 +32,7 @@ void loadTexture(const char *filename) {
 
     glGenTextures(1, &idTextura);
     glBindTexture(GL_TEXTURE_2D, idTextura);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, imagemTextura->sizeX, 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imagemTextura->sizeX, 
 			imagemTextura->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE,
 			imagemTextura->data);
 

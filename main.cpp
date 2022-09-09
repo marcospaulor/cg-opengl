@@ -1,12 +1,11 @@
 #include "quarto.h"
 #include <iostream>
-#include <math.h>
-#include <cstdio>
+#include <cmath>
 
-GLint WIDTH_GL = 800;
-GLint HEIGHT_GL = 600;
+GLint WIDTH_GL  = 1024;
+GLint HEIGHT_GL = 768;
 
-#define WIDTH_PC glutGet(GLUT_SCREEN_WIDTH)
+#define WIDTH_PC  glutGet(GLUT_SCREEN_WIDTH)
 #define HEIGHT_PC glutGet(GLUT_SCREEN_HEIGHT)
 
 GLdouble tetaxz = 0;
@@ -31,11 +30,6 @@ GLfloat posicao_luz0[]    = { -2.5, 3.0, -7.5, 1.0};
 GLfloat cor_luz0[]        = { 1.0, 1.0, 1.0, 1.0};
 GLfloat cor_luz0_amb[]    = { 1.0, 1.0, 1.0, 1.0};
 
-GLfloat posicao_luz1[]    = { 0.0, 10.0, 5.0, 1.0};
-GLfloat cor_luz1[]        = { 1.0, 1.0, 1.0, 1.0};
-GLfloat direcao_luz1[]    = { 0.0, -10.0, -5.0, 1.0};
-GLint   spot_luz1         = 30;
-
 GLfloat sem_cor[]         = { 0.0, 0.0, 0.0, 1.0};
     
 GLint gouraud = 1;
@@ -44,6 +38,7 @@ GLint move    = 0;
 void reshape(int width, int height) {
     WIDTH_GL=width;
     HEIGHT_GL=height;
+
     glViewport(0,0,(GLint)width,(GLint)height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -80,13 +75,14 @@ void display(void){
     chao();
     paredes();
     teto();
+    vao();
     som();
     tv();
 
-    glPushMatrix();
-    glTranslatef(posicao_luz0[0],posicao_luz0[1],posicao_luz0[2]);
-    glMaterialfv(GL_FRONT, GL_EMISSION, cor_luz0);
-    glPopMatrix();
+    // glPushMatrix();
+    // glTranslatef(posicao_luz0[0],posicao_luz0[1],posicao_luz0[2]);
+    // glMaterialfv(GL_FRONT, GL_EMISSION, cor_luz0);
+    // glPopMatrix();
 
     glMaterialfv(GL_FRONT, GL_EMISSION, sem_cor);
 
@@ -144,6 +140,9 @@ void keyboard(unsigned char key, int x, int y) {
         break;
     case 'm':
         move = 1 - move;
+    case 'n':
+        glColor3f(0.5, 0.5, 0.5);
+        break;
     }
 }
 
@@ -157,15 +156,8 @@ void init() {
     glLightfv(GL_LIGHT0, GL_AMBIENT, cor_luz0_amb);
     glLightfv(GL_LIGHT0, GL_POSITION, posicao_luz0);
 
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, cor_luz1);
-    glLightfv(GL_LIGHT1, GL_SPECULAR, cor_luz1);
-    glLightf (GL_LIGHT1, GL_SPOT_CUTOFF, spot_luz1);
-    glLightfv(GL_LIGHT1, GL_POSITION, posicao_luz1);
-    glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direcao_luz1);
-
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    glEnable(GL_LIGHT1);
 
     glEnable(GL_AUTO_NORMAL);
     glEnable(GL_NORMALIZE);
