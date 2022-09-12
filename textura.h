@@ -1,7 +1,8 @@
-#include <GL/glu.h>
-#include <GL/glut.h>
-#include <GL/glaux.h>
+#include "lib/glu.h"
+#include "lib/glut.h"
+#include "lib/glaux.h"
 #include <cstdio>
+#include <bmp.h>
 
 GLuint idTextura;
 AUX_RGBImageRec *imagemTextura;

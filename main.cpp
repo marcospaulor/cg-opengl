@@ -11,20 +11,12 @@ GLint HEIGHT_GL = 768;
 GLdouble tetaxz = 0;
 GLdouble raioxz = 5;
 
-GLdouble obs[3]  = {raioxz * cos(2 * M_PI * tetaxz / 360), 3.5, raioxz * sin(2 * M_PI * tetaxz / 360)};
+GLdouble obs[3]  = {raioxz * cos(2 * M_PI * tetaxz / 360) - 0.5, 3.5, raioxz * sin(2 * M_PI * tetaxz / 360)};
 GLdouble olho[3] = {0.0,3.0,0.0};
 
 GLfloat plano_difusa[]    = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat plano_especular[] = { 1.0, 1.0, 1.0, 1.0 };
 GLfloat plano_brilho[]    = { 50.0 };
-
-GLfloat mat_a_difusa[]    = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat mat_a_especular[] = { 1.0, 1.0, 1.0, 1.0 };
-GLfloat mat_a_brilho[]    = { 50.0 };
-
-GLfloat mat_b_difusa[]    = { 0.7, 0.7, 0.7, 0.5 };
-GLfloat mat_b_especular[] = { 1.0, 1.0, 1.0, 0.5 };
-GLfloat mat_b_brilho[]    = { 50.0 };
 
 GLfloat posicao_luz0[]    = { -2.5, 3.0, -7.5, 1.0};
 GLfloat cor_luz0[]        = { 1.0, 1.0, 1.0, 1.0};
@@ -79,10 +71,10 @@ void display(void){
     som();
     tv();
 
-    // glPushMatrix();
-    // glTranslatef(posicao_luz0[0],posicao_luz0[1],posicao_luz0[2]);
-    // glMaterialfv(GL_FRONT, GL_EMISSION, cor_luz0);
-    // glPopMatrix();
+    glPushMatrix();
+    glTranslatef(posicao_luz0[0],posicao_luz0[1],posicao_luz0[2]);
+    glMaterialfv(GL_FRONT, GL_EMISSION, cor_luz0);
+    glPopMatrix();
 
     glMaterialfv(GL_FRONT, GL_EMISSION, sem_cor);
 
@@ -107,7 +99,7 @@ void special(int key, int x, int y) {
             if (move == 0) {
                 olho[1] -= 0.5;
             }
-            else if (obs[0] < 5) {
+            else if (obs[0] < 4.5) {
                 obs[0] += 0.5;
                 olho[0] += 0.5;
             }
@@ -115,13 +107,11 @@ void special(int key, int x, int y) {
             glutPostRedisplay();
             break;
         case GLUT_KEY_LEFT:
-
             olho[2] += 0.5;
 
             glutPostRedisplay();
             break;
         case GLUT_KEY_RIGHT:
-
             olho[2] -= 0.5;
             
             glutPostRedisplay();
@@ -140,9 +130,6 @@ void keyboard(unsigned char key, int x, int y) {
         break;
     case 'm':
         move = 1 - move;
-    case 'n':
-        glColor3f(0.5, 0.5, 0.5);
-        break;
     }
 }
 
@@ -166,38 +153,13 @@ void init() {
     glEnable(GL_COLOR_MATERIAL);
 }
 
-void menu(int value) {
-    switch (value) {
-    case 0:
-        mat_a_especular[0]=mat_a_especular[1]=mat_a_especular[2]=0.0;
-        break;
-    case 1: 
-        mat_a_especular[0]=mat_a_especular[1]=mat_a_especular[2]=0.5;
-        break;
-    case 2:
-        mat_a_especular[0]=mat_a_especular[1]=mat_a_especular[2]=1.0;
-        break;
-    case 3:
-        mat_a_difusa[0]=mat_a_difusa[1]=mat_a_difusa[2]=0.0;
-        break;
-    case 4: 
-        mat_a_difusa[0]=mat_a_difusa[1]=mat_a_difusa[2]=0.5;
-        break;
-    case 5:
-        mat_a_difusa[0]=mat_a_difusa[1]=mat_a_difusa[2]=1.0;
-        break;
-    }
-    glutPostRedisplay();
-}
-
-
 int main(int argc, char **argv) {
     glutInitWindowPosition((WIDTH_PC - WIDTH_GL) / 2, (HEIGHT_PC - HEIGHT_GL) / 2);
     glutInitWindowSize(WIDTH_GL,HEIGHT_GL);
     glutInit(&argc,argv);
     glutInitDisplayMode(GLUT_RGB|GLUT_DEPTH|GLUT_DOUBLE);
 
-    if(!glutCreateWindow("Modelos de iluminacao")) {
+    if(!glutCreateWindow("Ambiente 8")) {
         fprintf(stderr,"Error opening a window.\n");
         exit(-1);
     }
@@ -208,15 +170,6 @@ int main(int argc, char **argv) {
     glutSpecialFunc(special);
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
-
-    glutCreateMenu(menu);
-    glutAddMenuEntry("-sem spec", 0);
-    glutAddMenuEntry("-spec m�dia", 1);
-    glutAddMenuEntry("-spec alta", 2);
-    glutAddMenuEntry("-sem difusa", 3);
-    glutAddMenuEntry("-difusa m�dia", 4);
-    glutAddMenuEntry("-difusa alta", 5);
-    glutAttachMenu(GLUT_RIGHT_BUTTON);
 
     glutMainLoop();
 
